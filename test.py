@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "YOUR API KEY HERE"
+openai.api_key = "ENTER API KEY HERE"
 
 
 def getChatResponse(prompt):
@@ -8,7 +8,7 @@ def getChatResponse(prompt):
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
-    return response
+    return response.choices[0].message.content
 
 
 def getImageForPrompt(prompt):
