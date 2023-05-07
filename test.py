@@ -2,7 +2,10 @@ import openai
 
 openai.api_key = "ENTER API KEY HERE"
 
-
+'''
+Takes a prompt as input and uses OpenAI's GPT-3.5 language model to generate a 
+chat response based on the prompt. Returns the response from the model.
+'''
 def getChatResponse(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -10,7 +13,10 @@ def getChatResponse(prompt):
     )
     return response.choices[0].message.content
 
-
+'''
+Takes a prompt as input and uses OpenAI's DALL-E to generate an image based on 
+the prompt. Returns a response object containing the generated image.
+'''
 def getImageForPrompt(prompt):
     response = openai.Image.create(
         prompt=prompt,
@@ -19,7 +25,10 @@ def getImageForPrompt(prompt):
     )
     return response
 
-
+'''
+Takes a prompt and an image file name as input, and uses OpenAI's DALL-E to generate an edited 
+version of the image based on the prompt. Returns a response object containing the edited image.
+'''
 def editImageFromPrompt(prompt, imageName):
     response = openai.Image.create_edit(
         prompt=prompt,
@@ -29,7 +38,10 @@ def editImageFromPrompt(prompt, imageName):
     )
     return response
 
-
+'''
+Takes an image file name as input and uses OpenAI's DALL-E to generate multiple 
+variations of the image. Returns a response object containing the generated images.
+'''
 def createImageVariation(imageName):
     response = openai.Image.create_variation(
         image=open(imageName, "rb"),
@@ -38,7 +50,10 @@ def createImageVariation(imageName):
     )
     return response
 
-
+'''
+Takes a response object as input and returns the URL of 
+the image contained within the response object.
+'''
 def getImageUrl(response):
     return response['data'][0]['url']
 
