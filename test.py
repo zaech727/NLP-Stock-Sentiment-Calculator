@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "OPEN API KEY"
+openai.api_key = "ENTER API KEY HERE"
 
 '''
 Takes a prompt as input and uses OpenAI's GPT-3.5 language model to generate a 
@@ -11,7 +11,7 @@ def getChatResponse(prompt):
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
-    return response
+    return response.choices[0].message.content
 
 '''
 Takes a prompt as input and uses OpenAI's DALL-E to generate an image based on 
