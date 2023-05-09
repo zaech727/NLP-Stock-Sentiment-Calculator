@@ -1,12 +1,10 @@
-from flask import Flask, render_template
-import test as t
-import openai
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+@app.route('/home')
+def login():
+    return render_template('home.html')
 
-@app.route('/')
-def index():
-    response = t.getChatResponse("Tell me a joke.")
-    print(response)
-    return render_template('index.html', response=response)
+if __name__ == '__main__':
+    app.run()
