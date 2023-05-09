@@ -61,7 +61,7 @@ class WebScraper:
 # Example usage:
 scraper = WebScraper()
 company_name = "tesla"
-num_headlines = 5
+num_headlines = 50
 headlines = scraper.get_headlines(company_name, num_headlines)
 for headline in headlines:
     print(headline)
