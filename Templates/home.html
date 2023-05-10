@@ -50,13 +50,22 @@
             font-size: 20px;
             text-align: center;
         }
+        
+        #result {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 20px;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <h1>Welcome to our finance website!</h1>
     <p>Here you can find the latest news and information about the world of finance.</p>
-    <form method="POST">
+    <form>
         <label for="dropdown">Choose a stock:</label>
         <select id="dropdown" name="dropdown">
             <option value="" disabled selected hidden>Select a stock</option>
@@ -64,8 +73,25 @@
             <option value="MSFT">MSFT</option>
             <option value="TSLA">TSLA</option>
         </select>
-        <button type="submit">Submit</button>
+        <button type="button" onclick="getStockData()">Get Stock Data</button>
     </form>
+    <div id="result"></div>
+
+    <script>
+        function getStockData() {
+            var selectedOption = document.getElementById("dropdown").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var result = document.getElementById("result");
+                    result.style.display = "block";
+                    result.innerHTML = "The stock data for " + selectedOption + " is " + this.responseText;
+                }
+            };
+            xhttp.open("GET", "/get_prediction?stock=" + selectedOption, true);
+            xhttp.send();
+        }
+    </script>
 </body>
 
 </html>
