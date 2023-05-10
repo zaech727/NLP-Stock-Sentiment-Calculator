@@ -37,12 +37,10 @@ class SentimentAnalysis:
         for i in range(len(headlines)):
             text = headlines[i]
             pred = self.getPrediction(text)
-            neg_prob = pred[0].item()
             pos_prob = pred[1].item()
-            predictions.append([neg_prob, pos_prob])
+            print(text, pos_prob)
+            predictions.append(pos_prob)
 
-        print(predictions)
         avg_pred = sum(predictions) / len(predictions)
 
         return avg_pred
-
