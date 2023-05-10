@@ -6,7 +6,7 @@ import urllib.parse
 import sentiment
 
 
-def get_headlines(company_name, num_headlines):
+def get_headlines(company_name, num_headlines=20):
     try:
         _create_unverified_https_context = ssl._create_unverified_context
     except AttributeError:
@@ -56,11 +56,11 @@ def get_headlines(company_name, num_headlines):
     return headlines
 
 
-company_name = "apple"
-num_headlines = 25
-headlines = get_headlines(company_name, num_headlines)
+# company_name = "apple"
+# num_headlines = 25
+# headlines = get_headlines(company_name, num_headlines)
 
-sentiment_analysis = sentiment.SentimentAnalysis()
-sentiment_metric = sentiment_analysis.getSentiment(headlines)
-sentiment_percent = round((sentiment_metric + 1) * 50)
-print(f"The sentiment of {company_name}'s stock performance is {sentiment_percent}%.")
+# sentiment_analysis = sentiment.SentimentAnalysis()
+# sentiment_metric = sentiment_analysis.getSentiment(headlines)
+# sentiment_percent = round((sentiment_metric + 1) * 50)
+# print(f"The sentiment of {company_name}'s stock performance is {sentiment_percent}%.")

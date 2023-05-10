@@ -1,5 +1,6 @@
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import web_scraper
 
 
 class SentimentAnalysis:
@@ -31,14 +32,14 @@ class SentimentAnalysis:
         )
         return model_predictions[0]
 
-    def getSentiment(self, headlines):
+    def getSentiment(self, company_name):
+        headlines = web_scraper.get_headlines(company_name)
         predictions = []
 
         for i in range(len(headlines)):
             text = headlines[i]
             pred = self.getPrediction(text)
             pos_prob = pred[1].item()
-            print(text, pos_prob)
             predictions.append(pos_prob)
 
         avg_pred = sum(predictions) / len(predictions)
