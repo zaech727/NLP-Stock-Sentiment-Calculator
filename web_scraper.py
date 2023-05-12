@@ -3,10 +3,9 @@ from bs4 import BeautifulSoup
 import requests
 import ssl
 import urllib.parse
-import sentiment
 
 
-def get_headlines(self, company_name, num_headlines):
+def get_headlines(company_name, num_headlines=20):
     try:
         _create_unverified_https_context = ssl._create_unverified_context
     except AttributeError:
@@ -25,27 +24,38 @@ def get_headlines(self, company_name, num_headlines):
         "bih": 865,
         "dpr": 2,
         "tbs": "qdr:d",
+        "sa": "X",
     }
 
     url = root + "search?" + urllib.parse.urlencode(params)
 
     headlines = []
-
-    while len(headlines) < num_headlines:
+    i = 0
+    while i < num_headlines:
         req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
         webpage = urlopen(req).read()
 
         with requests.Session() as c:
             soup = BeautifulSoup(webpage, "html5lib")
-            for item in soup.find_all("div", attrs={"class": "DnJfK"}):
+            for item in soup.find_all(
+                "div", attrs={"class": "Gx5Zad fP1Qef xpd EtOod pkphOe"}
+            ):
+                # Combine description and headline to give model more context for sentiment analysis
+                description = (
+                    item.find("div", attrs={"class": "BNeawe s3v9rd AP7Wnd"})
+                    .get_text()
+                    .replace(",", "")
+                )
+
                 headline = (
                     item.find("div", attrs={"class": "BNeawe vvjwJb AP7Wnd"})
                     .get_text()
                     .replace(",", "")
                 )
-                headlines.append(headline)
-                if len(headlines) >= num_headlines:
-                    break
+
+                text = headline + ". " + description
+                headlines.append(text)
+                i += 1
 
             next_page_link = soup.find("a", attrs={"aria-label": "Next page"})
             if not next_page_link:
@@ -54,12 +64,3 @@ def get_headlines(self, company_name, num_headlines):
             url = root + next_page_link["href"]
 
     return headlines
-
-
-company_name = "google"
-num_headlines = 5
-headlines = scraper.get_headlines(company_name, num_headlines)
-
-sentiment_analysis = sentiment.SentimentAnalysis()
-sentiment_metric = sentiment_analysis.getSentiment(headlines)
-print(f"The sentiment of {company_name}'s stock performance is {sentiment_metric}.")
