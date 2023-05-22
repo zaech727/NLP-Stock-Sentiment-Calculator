@@ -29,7 +29,7 @@ sentiment_analysis = sentiment_analysis.SentimentAnalysis()
 
 def getStockSentiment(stock_symbol):
     sentiment_value = sentiment_analysis.getSentiment(stock_symbol)
-    return str(round(sentiment_value, 2))
+    return round(sentiment_value, 3)
 
 
 @app.route("/", methods=["GET", "POST"])
