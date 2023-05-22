@@ -1,3 +1,44 @@
+
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+}
+h1 {
+    color: #2e2e2e;
+    text-align: center;
+    padding: 20px 0;
+}
+.table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.table tr:hover {background-color: #ddd;}
+form {
+    width: 80%;
+    margin: 20px auto;
+}
+form input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    margin-right: 10px;
+}
+form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+form input[type="submit"]:hover {
+    background-color: #45a049;
+}
+/* 
 body {
     font-family: Arial, sans-serif;
     background-color: #f1f1f1;
@@ -52,4 +93,4 @@ select option {
     margin: 20px;
     text-align: center;
     display: none;
-}
+} */
