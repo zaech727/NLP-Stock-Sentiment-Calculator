@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import sentiment_analysis
+import re
+from stock_price import get_stock_price
 
 app = Flask(__name__)
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////database.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+app.secret_key = 'apple123' # This is the new line
 db = SQLAlchemy(app)
 
 
@@ -35,9 +38,21 @@ def getStockSentiment(stock_symbol):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
-        stock_symbol = request.form["content"]
+        stock_symbol = request.form["content"].strip().upper()
+
+        # Check if input is blank or invalid
+        if not stock_symbol:
+            flash("Error: You cannot submit a blank stock symbol.")
+            return redirect("/")
+        elif not re.match(r'^[A-Z]{1,5}$', stock_symbol):
+            flash("Error: Invalid stock symbol. Please enter 1-5 uppercase alphabetical characters.")
+            return redirect("/")
+
         stock = Stock.query.filter_by(symbol=stock_symbol).first()
-        if not stock:
+        if stock:
+            flash("Error: This stock symbol has already been added.")
+            return redirect("/")
+        else:
             new_stock = Stock(
                 symbol=stock_symbol, sentiment=getStockSentiment(stock_symbol)
             )
@@ -47,12 +62,17 @@ def home():
                 db.session.commit()
                 return redirect("/")
             except:
-                return "Unable to add stock to database"
-        return redirect("/")
+                flash("Unable to add stock to database.")
+                return redirect("/")
 
     else:
         stocks = Stock.query.order_by(Stock.symbol).all()
-        return render_template("home.html", stocks=stocks)
+        stock_prices = {}
+        for stock in stocks:
+            symbol = stock.symbol
+            stock_prices[symbol] = get_stock_price(symbol)
+
+        return render_template("home.html", stocks=stocks, stock_prices=stock_prices)
 
 
 @app.route("/delete/<int:id>")
