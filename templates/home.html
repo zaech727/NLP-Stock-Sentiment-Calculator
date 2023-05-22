@@ -27,12 +27,14 @@
         <th>Symbol</th>
         <th>Sentiment Score</th>
         <th>Date/Time Created</th>
+        <th>Price</th>
     </tr>
     {% for stock in stocks %}
     <tr>
         <td>{{ stock.symbol }}</td>
         <td>{{ stock.sentiment }}</td>
         <td>{{ stock.created }}</td>
+        <td>{{ stock_prices[stock.symbol] }}</td>
         <td>
             <a href="/delete/{{ stock.id }}">Delete</a>
             <a href="/update/{{ stock.id }}">Update</a>

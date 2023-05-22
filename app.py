@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import sentiment_analysis
 import re
+from stock_price import get_stock_price
 
 app = Flask(__name__)
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////database.db"
@@ -64,11 +65,14 @@ def home():
                 flash("Unable to add stock to database.")
                 return redirect("/")
 
-        return redirect("/")
-
     else:
         stocks = Stock.query.order_by(Stock.symbol).all()
-        return render_template("home.html", stocks=stocks)
+        stock_prices = {}
+        for stock in stocks:
+            symbol = stock.symbol
+            stock_prices[symbol] = get_stock_price(symbol)
+
+        return render_template("home.html", stocks=stocks, stock_prices=stock_prices)
 
 
 @app.route("/delete/<int:id>")
