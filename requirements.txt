@@ -3,3 +3,6 @@ torch
 numpy
 openai
 bs4
+flask
+flask-sqlalchemy
+html5lib
