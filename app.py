@@ -35,7 +35,6 @@ def getStockSentiment(stock_symbol):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
-        # print("*** REQUEST FORM ***\n", request.form)
         stock_symbol = request.form["content"]
         stock = Stock.query.filter_by(symbol=stock_symbol).first()
         if not stock:
@@ -49,6 +48,7 @@ def home():
                 return redirect("/")
             except:
                 return "Unable to add stock to database"
+        return redirect("/")
 
     else:
         stocks = Stock.query.order_by(Stock.symbol).all()
