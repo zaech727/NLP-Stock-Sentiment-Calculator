@@ -2,3 +2,5 @@
 env/
 .DS_STORE
 __pycache__
+instance/database.db
+database.db
