@@ -4,13 +4,17 @@ from datetime import datetime
 import sentiment_analysis
 import re
 from stock_price import get_stock_price
+from datetime import datetime
 
 app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////database.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-app.secret_key = 'apple123' # This is the new line
+app.secret_key = 'apple123'
 db = SQLAlchemy(app)
 
+def time_diff_in_minutes(time):
+    now = datetime.utcnow()
+    diff = now - time
+    return diff.seconds//60
 
 class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,11 +25,6 @@ class Stock(db.Model):
     def __repr__(self):
         return "<Stock %r>" % self.symbol + " " + str(self.sentiment)
 
-
-# create database
-# with app.app_context():
-#     db.create_all()
-# exit()
 
 sentiment_analysis = sentiment_analysis.SentimentAnalysis()
 
@@ -72,8 +71,8 @@ def home():
             symbol = stock.symbol
             stock_prices[symbol] = get_stock_price(symbol)
 
-        return render_template("home.html", stocks=stocks, stock_prices=stock_prices)
-
+        return render_template("home.html", stocks=stocks, stock_prices=stock_prices, 
+                               time_diff_in_minutes=time_diff_in_minutes)
 
 @app.route("/delete/<int:id>")
 def delete(id):

@@ -1,33 +1,42 @@
-
 body {
     background-color: #f2f2f2;
     font-family: Arial, sans-serif;
 }
+
 h1 {
     color: #2e2e2e;
     text-align: center;
     padding: 20px 0;
 }
+
 .table {
     width: 80%;
     margin: 0 auto;
     border-collapse: collapse;
 }
-.table th, .table td {
+
+.table th,
+.table td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
-.table tr:hover {background-color: #ddd;}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
 form {
     width: 80%;
     margin: 20px auto;
 }
+
 form input[type="text"] {
     width: 70%;
     padding: 10px;
     margin-right: 10px;
 }
+
 form input[type="submit"] {
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -35,62 +44,29 @@ form input[type="submit"] {
     border: none;
     cursor: pointer;
 }
+
 form input[type="submit"]:hover {
     background-color: #45a049;
 }
-/* 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f1f1f1;
-}
 
-h1 {
-    color: #333;
-    font-size: 36px;
-    text-align: center;
-    margin-top: 50px;
-}
-
-p {
-    color: #666;
-    font-size: 18px;
-    line-height: 1.5;
-    margin: 20px;
-}
-
-select {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #333;
-    font-size: 20px;
-    cursor: pointer;
-    text-align-last: center;
-    margin: 20px 0;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-
-select:hover {
-    background-color: #f1f1f1;
-}
-
-select option {
-    background-color: #fff;
-    color: #333;
-    font-size: 20px;
-    text-align: center;
-}
-
-#result {
-    color: #666;
-    font-size: 18px;
-    line-height: 1.5;
-    margin: 20px;
-    text-align: center;
+/* Loader Styles */
+.loader-container {
     display: none;
-} */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

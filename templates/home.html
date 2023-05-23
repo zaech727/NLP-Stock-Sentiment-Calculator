@@ -34,13 +34,34 @@
     .card-header h2 {
         margin-bottom: 0;
     }
+
+    .loader-container {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container">
     <h1 class="text-center mt-5 mb-4">Stock Sentiment Tracker</h1>
-    
+
     <!-- Display flash messages -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -72,7 +93,7 @@
                     <tr>
                         <td>{{ stock.symbol }}</td>
                         <td>{{ stock.sentiment }}</td>
-                        <td>{{ stock.created }}</td>
+                        <td>{{ time_diff_in_minutes(stock.created) }} minutes ago</td>
                         <td>{{ stock_prices[stock.symbol] }}</td>
                         <td>
                             <a href="/delete/{{ stock.id }}" class="btn btn-danger btn-sm">Delete</a>
@@ -85,7 +106,7 @@
         </div>
     </div>
 
-    <form action="/" method="POST" class="my-4">
+    <form action="/" method="POST" class="my-4" id="stockForm">
         <div class="input-group">
             <input type="text" name="content" id="content" class="form-control" placeholder="Enter a stock symbol">
             <div class="input-group-append">
@@ -94,4 +115,41 @@
         </div>
     </form>
 </div>
+
+<!-- Loading spinner -->
+<div class="loader-container">
+    <div class="loader"></div>
+</div>
+
+<!-- JavaScript to handle form submission and show/hide the loader -->
+<script>
+    document.getElementById("stockForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Show the loading spinner
+        document.querySelector('.loader-container').style.display = 'flex';
+
+        fetch("/", {
+            method: "POST",
+            body: new FormData(event.target) // event.target refers to the form
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide the loading spinner
+            document.querySelector('.loader-container').style.display = 'none';
+
+            if (data.status === "success") {
+                // Handle success response
+                // For example, update the stocks table
+            } else if (data.status === "error") {
+                // Handle error response
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            // Handle fetch error
+            console.error('Error:', error);
+        });
+    });
+</script>
 {% endblock %}
