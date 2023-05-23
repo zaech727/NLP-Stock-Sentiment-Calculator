@@ -6,9 +6,8 @@ import re
 from stock_price import get_stock_price
 
 app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////database.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-app.secret_key = 'apple123' # This is the new line
+app.secret_key = "apple123"  # This is the new line
 db = SQLAlchemy(app)
 
 
@@ -39,40 +38,44 @@ def getStockSentiment(stock_symbol):
 def home():
     if request.method == "POST":
         stock_symbol = request.form["content"].strip().upper()
+        return create_stock(stock_symbol)
 
-        # Check if input is blank or invalid
-        if not stock_symbol:
-            flash("Error: You cannot submit a blank stock symbol.")
-            return redirect("/")
-        elif not re.match(r'^[A-Z]{1,5}$', stock_symbol):
-            flash("Error: Invalid stock symbol. Please enter 1-5 uppercase alphabetical characters.")
-            return redirect("/")
+    stocks = Stock.query.order_by(Stock.symbol).all()
+    stock_prices = {}
+    for stock in stocks:
+        symbol = stock.symbol
+        stock_prices[symbol] = get_stock_price(symbol)
 
-        stock = Stock.query.filter_by(symbol=stock_symbol).first()
-        if stock:
-            flash("Error: This stock symbol has already been added.")
-            return redirect("/")
-        else:
-            new_stock = Stock(
-                symbol=stock_symbol, sentiment=getStockSentiment(stock_symbol)
-            )
+    return render_template("home.html", stocks=stocks, stock_prices=stock_prices)
 
-            try:
-                db.session.add(new_stock)
-                db.session.commit()
-                return redirect("/")
-            except:
-                flash("Unable to add stock to database.")
-                return redirect("/")
 
-    else:
-        stocks = Stock.query.order_by(Stock.symbol).all()
-        stock_prices = {}
-        for stock in stocks:
-            symbol = stock.symbol
-            stock_prices[symbol] = get_stock_price(symbol)
+def create_stock(stock_symbol):
+    stock_symbol = stock_symbol.strip().upper()
 
-        return render_template("home.html", stocks=stocks, stock_prices=stock_prices)
+    # Check if input is blank or invalid
+    if not stock_symbol:
+        flash("Error: You cannot submit a blank stock symbol.")
+        return redirect("/")
+    if not re.match(r"^[A-Z]{1,5}$", stock_symbol):
+        flash(
+            "Error: Invalid stock symbol. Please enter 1-5 uppercase alphabetical characters."
+        )
+        return redirect("/")
+
+    stock = Stock.query.filter_by(symbol=stock_symbol).first()
+    if stock:
+        flash("Error: This stock symbol has already been added.")
+        return redirect("/")
+
+    new_stock = Stock(symbol=stock_symbol, sentiment=getStockSentiment(stock_symbol))
+
+    try:
+        db.session.add(new_stock)
+        db.session.commit()
+    except:
+        flash("Unable to add stock to database.")
+
+    return redirect("/")
 
 
 @app.route("/delete/<int:id>")
