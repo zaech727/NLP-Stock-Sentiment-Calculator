@@ -28,7 +28,17 @@ sentiment_analysis = sentiment_analysis.SentimentAnalysis()
 
 def getStockSentiment(stock_symbol):
     sentiment_value = sentiment_analysis.getSentiment(stock_symbol)
-    return round(sentiment_value, 3)
+    # assume original sentiment_value is from -1 to 1. Modify this line if it's different.
+    scaled_value = 50 * (sentiment_value + 1)  # scale it to 0-100
+    return round(scaled_value, 2)
+
+def getColor(score):
+    if score >= 60:
+        return "#00FF00"  # Bright green
+    elif score >= 40:
+        return "#FFFF99"  # Slightly dimmer yellow
+    else:
+        return "red"
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -40,7 +50,15 @@ def home():
         stock_prices = {}
         for stock in stocks:
             symbol = stock.symbol
-            stock_prices[symbol] = get_stock_price(symbol)
+            sentiment = getStockSentiment(symbol)
+            color = getColor(sentiment)
+            stock.sentiment = sentiment
+            stock_prices[symbol] = {
+                'price': get_stock_price(symbol),
+                'color': color
+            }
+
+        db.session.commit() 
 
         return render_template("home.html", stocks=stocks, stock_prices=stock_prices, time_diff_in_minutes=time_diff_in_minutes)
 

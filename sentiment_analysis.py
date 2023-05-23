@@ -6,11 +6,9 @@ import web_scraper
 class SentimentAnalysis:
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained(
-            "assemblyai/distilbert-base-uncased-sst2"
-        )
+            "ProsusAI/finBERT")
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            "assemblyai/distilbert-base-uncased-sst2"
-        )
+            "ProsusAI/finBERT")
 
     def getPrediction(self, text):
         tokenized_segments = self.tokenizer(
@@ -56,6 +54,10 @@ class SentimentAnalysis:
 
             predictions.append(pos_prob)
 
-        avg_pred = sum(predictions) / len(predictions)
+        # Check if predictions list is not empty
+        if len(predictions) > 0:
+            avg_pred = sum(predictions) / len(predictions)
+        else:
+            avg_pred = 0 
 
         return avg_pred

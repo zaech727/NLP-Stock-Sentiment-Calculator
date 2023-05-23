@@ -82,7 +82,7 @@
                 <thead>
                     <tr>
                         <th>Symbol</th>
-                        <th>Sentiment Score</th>
+                        <th>Sentiment Score %</th>
                         <th>Date/Time Created</th>
                         <th>Price</th>
                         <th>Actions</th>
@@ -92,9 +92,10 @@
                     {% for stock in stocks %}
                     <tr>
                         <td>{{ stock.symbol }}</td>
-                        <td>{{ stock.sentiment }}</td>
+                        <td style="color: {{ stock_prices[stock.symbol].color }}">{{ stock.sentiment }}</td>
                         <td>{{ time_diff_in_minutes(stock.created) }} minutes ago</td>
-                        <td>{{ stock_prices[stock.symbol] }}</td>
+                        <td>{{ stock_prices[stock.symbol]['price'] }}</td>
+
                         <td>
                             <a href="/delete/{{ stock.id }}" class="btn btn-danger btn-sm">Delete</a>
                             <a href="/update/{{ stock.id }}" class="btn btn-primary btn-sm">Update</a>
