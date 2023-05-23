@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="loader"></div>
+<!-- <div id="loader" class="loader"></div>
 
 <style>
 .loader {
@@ -19,3 +19,19 @@
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
+}
+
+/* Add a class to hide the loader */
+.hide-loader {
+  display: none;
+}
+</style>
+
+<script>
+window.onload = function() {
+  // Hide the loader when the page has finished loading
+  document.getElementById('loader').classList.add('hide-loader');
+};
+</script> -->
+
+{% endblock %}
