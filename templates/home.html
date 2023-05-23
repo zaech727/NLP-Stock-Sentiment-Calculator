@@ -3,49 +3,95 @@
 {% block head %}
 <title>Finance Website</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+<style>
+    body {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    h1 {
+        color: #D4AF37;
+        font-weight: bold;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    .highlight {
+        font-style: italic;
+    }
+
+    .card-body {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        background-color: rgba(2, 7, 14, 0.8);
+    }
+
+    .card-header h2 {
+        margin-bottom: 0;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-<h1>Stock Sentiment Tracker</h1>
+<div class="container">
+    <h1 class="text-center mt-5 mb-4">Stock Sentiment Tracker</h1>
+    
+    <!-- Display flash messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-<!-- Display flash messages -->
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="alert alert-danger">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="text-center">My Stocks</h2>
         </div>
-    {% endif %}
-{% endwith %}
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Sentiment Score</th>
+                        <th>Date/Time Created</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td>{{ stock.symbol }}</td>
+                        <td>{{ stock.sentiment }}</td>
+                        <td>{{ stock.created }}</td>
+                        <td>{{ stock_prices[stock.symbol] }}</td>
+                        <td>
+                            <a href="/delete/{{ stock.id }}" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="/update/{{ stock.id }}" class="btn btn-primary btn-sm">Update</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<table class="table">
-    <tr>
-        <th>My Stocks</th>
-    </tr>
-    <tr>
-        <th>Symbol</th>
-        <th>Sentiment Score</th>
-        <th>Date/Time Created</th>
-        <th>Price</th>
-    </tr>
-    {% for stock in stocks %}
-    <tr>
-        <td>{{ stock.symbol }}</td>
-        <td>{{ stock.sentiment }}</td>
-        <td>{{ stock.created }}</td>
-        <td>{{ stock_prices[stock.symbol] }}</td>
-        <td>
-            <a href="/delete/{{ stock.id }}">Delete</a>
-            <a href="/update/{{ stock.id }}">Update</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-
-<form action="/" method="POST">
-    <input type="text" name="content" id="content" placeholder="Enter a stock symbol">
-    <input type="submit" value="Add Stock">
-</form>
-
+    <form action="/" method="POST" class="my-4">
+        <div class="input-group">
+            <input type="text" name="content" id="content" class="form-control" placeholder="Enter a stock symbol">
+            <div class="input-group-append">
+                <input type="submit" value="Add Stock" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
